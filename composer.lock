@@ -1,0 +1,53 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "7a7087da84cc290cc8ab2e2adad9058b",
+    "packages": [
+        {
+            "name": "evt/util",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eturnhout/evt-util.git",
+                "reference": "838a5934a7612c44b8c42a36a0ffefae482ae97e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eturnhout/evt-util/zipball/838a5934a7612c44b8c42a36a0ffefae482ae97e",
+                "reference": "838a5934a7612c44b8c42a36a0ffefae482ae97e",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Evt\\Util\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Eelke van Turnhout",
+                    "email": "eelketurnhout3@gmail.com"
+                }
+            ],
+            "description": "Some (hopefully) handy code to reuse.",
+            "time": "2018-09-11T19:07:19+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "evt/util": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
