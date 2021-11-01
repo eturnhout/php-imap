@@ -297,10 +297,6 @@ class Cli extends AbstractClient
      */
     public function printDebugOutput()
     {
-        if (! $this->debug) {
-            throw new \Exception(__METHOD__ . '; Debug mode is off.');
-        }
-
         echo $this->debugOutput;
     }
 
@@ -347,7 +343,7 @@ class Cli extends AbstractClient
             throw new \Exception(__METHOD__ . '; Unable to write to socket.');
         }
 
-        $response = $this->read();
+        $response = $this->read($command->debugEnabled());
 
         if ( ! $command->isUntagged()) {
             $response = $this->stripTag($response);
@@ -362,7 +358,7 @@ class Cli extends AbstractClient
      *
      * @return string The response from the server.
      */
-    protected function read()
+    protected function read(bool $debug = false)
     {
         $line = fread($this->socket, 2048);
         $this->error = null;
@@ -389,10 +385,10 @@ class Cli extends AbstractClient
             }
         }
 
-        if ($this->debug && ! is_null($this->error) && is_null($response)) {
+        if ($debug && $this->error && ! $response) {
             $this->printDebugOutput();
             throw new \Exception(__METHOD__ . '; An error has occurred "' . $this->error . '"');
-        } elseif ($this->debug && ! is_null($response)) {
+        } else if ($debug && $response) {
             $this->debugOutput .= $response;
         }
 
