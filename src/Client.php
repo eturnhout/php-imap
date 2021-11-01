@@ -63,39 +63,6 @@ class Client
     }
 
     /**
-     * Select a mailbox to interact with
-     *
-     * @param string $mailbox Name of the mailbox to use
-     *
-     * @return Evt\Imap\Structure\Mailbox
-     */
-    public function useMailbox($mailbox)
-    {
-        $this->login();
-        $response = $this->cli->select($mailbox);
-        $lines = explode("\r\n", $response);
-
-        $uidvalidity = 0;
-        $exists = 0;
-        $recent = 0;
-        $uidnext = 0;
-
-        foreach ($lines as $line) {
-            if (strpos($line, "UIDVALIDITY") !== false) {
-                $uidvalidity = (int) filter_var($line, FILTER_SANITIZE_NUMBER_INT);
-            } elseif (strpos($line, "EXISTS") !== false) {
-                $exists = (int) filter_var($line, FILTER_SANITIZE_NUMBER_INT);
-            } elseif (strpos($line, "RECENT") !== false) {
-                $recent = (int) filter_var($line, FILTER_SANITIZE_NUMBER_INT);
-            } elseif (strpos($line, "UIDNEXT") !== false) {
-                $uidnext = (int) filter_var($line, FILTER_SANITIZE_NUMBER_INT);
-            }
-        }
-
-        return new Mailbox($mailbox, $uidvalidity, $exists, $recent, $uidnext);
-    }
-
-    /**
      * Get a range of message headers
      *
      * @param int $fromUid  The starting uid to fetch messages from
