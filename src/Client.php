@@ -55,13 +55,11 @@ class Client
         $this->cli = new Cli($config);
     }
 
-    public function executeCommand(\Evt\Imap\Commands\AbstractCommand $command)
+    public function executeCommand(\Evt\Imap\Commands\AbstractCommand $command) : \Evt\Imap\Structures\StructureInterface
     {
         $this->login();
 
-        $response = $this->cli->execute($command);
-
-        return $command->getParser()->parse($response);
+        return $this->cli->execute($command);
     }
 
     /**

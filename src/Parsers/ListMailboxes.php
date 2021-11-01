@@ -4,7 +4,7 @@ namespace Evt\Imap\Parsers;
 
 class ListMailboxes implements ParserInterface
 {
-    public function parse(string $string)
+    public function parse(string $string) : \Evt\Imap\Structures\StructureInterface
     {
         if ( ! $string) {
             throw new \Exception(__METHOD__ . '; Unable to list the mailboxes.');
@@ -16,7 +16,6 @@ class ListMailboxes implements ParserInterface
 
         $lines = explode("\r\n", $string);
         $mailboxes = array();
-        $mailboxes["delimiter"] = $delimiter;
         $needle = "\" ";
 
         foreach ($lines as $line) {
@@ -24,6 +23,6 @@ class ListMailboxes implements ParserInterface
             $mailboxes[] = trim($mailbox);
         }
 
-        return $mailboxes;
+        return new \Evt\Imap\Structures\Mailboxes($delimiter, $mailboxes);
     }
 }

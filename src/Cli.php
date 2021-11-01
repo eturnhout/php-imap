@@ -330,7 +330,7 @@ class Cli extends AbstractClient
         }
     }
 
-    public function execute(\Evt\Imap\Commands\AbstractCommand $command)
+    public function execute(\Evt\Imap\Commands\AbstractCommand $command) : \Evt\Imap\Structures\StructureInterface
     {
         if ($command->isUntagged()) {
             $fullCommand = $command . "\r\n";
@@ -350,10 +350,10 @@ class Cli extends AbstractClient
         $response = $this->read();
 
         if ( ! $command->isUntagged()) {
-            return $this->stripTag($response);
+            $response = $this->stripTag($response);
         }
 
-        return $response;
+        return $command->getParser()->parse($response);
     }
 
     /**
