@@ -2,7 +2,7 @@
 namespace Evt\Imap;
 
 use Evt\Imap\Config;
-use Evt\Util\AbstractClient;
+use Evt\Imap\Client\AbstractClient;
 
 /**
  * Evt\Imap\Cli
@@ -14,7 +14,6 @@ use Evt\Util\AbstractClient;
  */
 class Cli extends AbstractClient
 {
-
     /**
      * Every command to the imap server needs a unique tag
      * This is the prefix to that tag
@@ -174,43 +173,6 @@ class Cli extends AbstractClient
     }
 
     /**
-     * Get a list of mailboxes and the hierarchy delimiter
-     * Runs the LIST command described in rfc3501#section-6.3.8
-     *
-     * @param string $referenceName (optional) Reference name
-     * @param string $mailboxName   (optional) Mailbox name with possible wildcards
-     *
-     * @return string The LIST response from the server
-     *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
-     */
-    public function list($referenceName = '', $mailboxName = '*')
-    {
-        if (! is_string($referenceName)) {
-            throw new \InvalidArgumentException(__METHOD__ . "; The reference name must be a non empty string.");
-        }
-
-        if (! is_string($mailboxName)) {
-            throw new InvalidArgumentException(__METHOD__ . "; The mailbox name must be a string.");
-        }
-
-        $command = 'LIST "' . $referenceName . '" "' . $mailboxName . '"';
-        $this->sendCommand($command);
-
-        $response = $this->read();
-
-        if (is_null($response)) {
-            throw new \Exception(__METHOD__ . '; Unable to list the mailboxes.');
-        }
-
-        $needle = "\r\n" . self::TAG_PREFIX . $this->tagLine;
-        $strippedResponse = substr($response, 0, strrpos($response, $needle));
-
-        return $strippedResponse;
-    }
-
-    /**
      * Get a list of subscribed mailboxes and the hierarchy delimiter
      * Runs the LSUB command described in rfc3501#section-6.3.9
      *
@@ -366,6 +328,32 @@ class Cli extends AbstractClient
         if (! fwrite($this->socket, $fullCommand)) {
             throw new Exception(__METHOD__ . '; Unable to write to socket.');
         }
+    }
+
+    public function execute(\Evt\Imap\Commands\AbstractCommand $command)
+    {
+        if ($command->isUntagged()) {
+            $fullCommand = $command . "\r\n";
+        } else {
+            $this->tagLine ++;
+            $fullCommand = self::TAG_PREFIX . $this->tagLine . ' ' . $command->getCommand() . "\r\n";
+        }
+
+        if ($command->debugEnabled()) {
+            $this->debugOutput .= $fullCommand;
+        }
+
+        if ( ! fwrite($this->socket, $fullCommand)) {
+            throw new \Exception(__METHOD__ . '; Unable to write to socket.');
+        }
+
+        $response = $this->read();
+
+        if ( ! $command->isUntagged()) {
+            return $this->stripTag($response);
+        }
+
+        return $response;
     }
 
     /**
