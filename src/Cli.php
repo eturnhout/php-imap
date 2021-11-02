@@ -209,91 +209,9 @@ class Cli extends AbstractClient
     }
 
     /**
-     * Select a mailbox
-     * Sends the SELECT command described in rfc3501#section-6.3.1
-     *
-     * @param string $mailbox Name of the mailbox to interact with
-     *
-     * @return string The server's response to the SELECT command
-     *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
-     */
-    public function select($mailbox)
-    {
-        if (! is_string($mailbox) || strlen($mailbox) == 0) {
-            throw new \InvalidArgumentException(__METHOD__ . "; The mailbox must be a non empty string.");
-        }
-
-        $command = 'SELECT "' . $mailbox . '"';
-        $this->sendCommand($command);
-        $response = $this->read();
-
-        if (is_null($response)) {
-            throw new \Exception(__METHOD__ . '; Unable to select the mailbox "' . $mailbox . '".');
-        }
-
-        $strippedResponse = $this->stripTag($response);
-
-        return $strippedResponse;
-    }
-
-    /**
-     * Fetch messages by UID ranges
-     * Sends a UID FETCH command described in rfc3501#section-6.4.8
-     *
-     * @param string $sequenceSet   Use the UIDs to fetch messages. ({UID} or {UID:UID} to fetch a range of messages)
-     * @param string $data          (optional) Describe the type of data to return. Find a list of options in rfc3501#section-6.4.5
-     *
-     * @return string|null The server's response with the messages requested or null when nothing was found
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function uidFetch($sequenceSet, $data)
-    {
-        if (! is_string($sequenceSet) || strlen($sequenceSet) == 0) {
-            throw new \InvalidArgumentException(__METHOD__ . "; The sequence set must be a non empty string.");
-        }
-
-        $command = 'UID FETCH ' . $sequenceSet . ' ' . $data;
-
-        $this->sendCommand($command);
-
-        $response = $this->read();
-
-        if (strlen($response) == 0) {
-            return null;
-        }
-
-        /*
-         * If this passes it'll probably result in an error when executing the next command. When fetching messages with a range certain range, GMAIL will send the messages from 1...N.
-         * Where each line ends with a + sign, indicating it's waiting for a response. I chose to send a empty response to continue.
-         * @TODO Find a better solution if possible.
-         */
-        if (strlen($response) != 0 && strpos($response, "+", strlen($response) - 1)) {
-            $this->sendCommand('', true);
-            $response .= $this->read();
-        }
-
-        $strippedResponse = $this->stripTag($response);
-
-        return $strippedResponse;
-    }
-
-    /**
-     * Turn debug mode on to track the input/output commands between the server
-     */
-    public function debugMode()
-    {
-        $this->debug = true;
-    }
-
-    /**
      * Print the in/output commands
      *
      * @return string The commands and responses
-     *
-     * @throws \Exception
      */
     public function printDebugOutput()
     {
