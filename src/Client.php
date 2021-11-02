@@ -5,10 +5,6 @@ namespace Evt\Imap;
 use Evt\Imap\Config;
 use Evt\Imap\Cli;
 use Evt\Imap\Parser;
-use Evt\Imap\Structure\Mailbox;
-use Evt\Imap\Structure\Message\HeaderStack as MessageHeaders;
-use Evt\Imap\Structure\Message\Header as MessageHeader;
-use Evt\Imap\Structure\Envelope;
 use Evt\Imap\Structure\Body\PartStack as BodyParts;
 use Evt\Imap\Structure\Body\Part as BodyPart;
 use Evt\Imap\Structure\Message;
@@ -39,13 +35,6 @@ class Client
     protected $loggedIn;
 
     /**
-     * For checking if a mailbox is selected or not
-     *
-     * @var boolean
-     */
-    protected $selectedMailbox;
-
-    /**
      * Evt\Imap\Client
      *
      * @param Evt\Imap\Config $config The configurations for a imap server connection
@@ -60,71 +49,6 @@ class Client
         $this->login();
 
         return $this->cli->execute($command);
-    }
-
-    /**
-     * Get a range of message headers
-     *
-     * @param int $fromUid  The starting uid to fetch messages from
-     * @param int $toUid    (optional) The last uid to fetch to
-     *                      Set this to null if you only want the message with the $fromUid, else all message after the $fromUid are also fetched
-     *
-     * @return Evt\Imap\Structure\Message\HeaderStack The message headers with the uid, envelope and bodystructure
-     *
-     * @throws InvalidArgumentException
-     */
-    public function getMessageHeaders($fromUid, $toUid = "*")
-    {
-        Validate::integer("from-uid", $fromUid, __METHOD__);
-
-        if (! is_null($toUid) && $toUid != "*" && ! is_int($toUid)) {
-            throw new \InvalidArgumentException(__METHOD__ . '; "toUid" can only be an integer or the * symbol. ' . gettype($toUid) . ' given.');
-        }
-
-        $lastUid = (! is_null($toUid)) ? ":" . $toUid : "";
-        $uids = $fromUid . $lastUid;
-        $response = $this->cli->uidFetch($uids, "(ENVELOPE BODYSTRUCTURE FLAGS)");
-        $lines = explode("\r\n", $response);
-
-        $messageHeaders = new MessageHeaders();
-
-        foreach ($lines as $line) {
-            if (strlen($line) != 0) {
-                $decodedLine = mb_decode_mimeheader($line);
-
-                // First get the uid
-                $matches = null;
-                preg_match("~UID (?<uid>[0-9]+)~", $decodedLine, $matches);
-                $uid = (int) $matches['uid'];
-
-                // Parse the envelope
-                $envelopeStart = strpos($line, "ENVELOPE");
-                $envelopeEnd = strpos($line, " BODYSTRUCTURE");
-                $rawEnvelope = substr($decodedLine, $envelopeStart, $envelopeEnd - $envelopeStart);
-                $decodedLine = str_replace($rawEnvelope, "", $decodedLine);
-                $envelope = Parser::parseEnvelope($rawEnvelope);
-
-                // Parse the bodystructure
-                $bodystructureStart = strpos($decodedLine, "BODYSTRUCTURE");
-                $rawBodystructure = substr($decodedLine, $bodystructureStart, strlen($decodedLine));
-
-                if (strpos($rawBodystructure, "FLAGS") !== false) {
-                    $rawBodystructure = substr($decodedLine, $bodystructureStart, strpos($rawBodystructure, "FLAGS"));
-                }
-
-                $decodedLine = str_replace($rawBodystructure, "", $decodedLine);
-                $bodystructure = Parser::parseBodystructure($rawBodystructure);
-
-                // Parse the flags
-                $flagsStart = strpos($decodedLine, "FLAGS");
-                $rawFlags = substr($decodedLine, $flagsStart);
-                $flags = Parser::parseFlags($rawFlags);
-
-                $messageHeaders->push(new MessageHeader($uid, $envelope, $bodystructure, $flags));
-            }
-        }
-
-        return $messageHeaders;
     }
 
     /**
