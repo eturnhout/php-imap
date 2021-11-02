@@ -61,6 +61,11 @@ class Client
         return $this->executeCommand(new \Evt\Imap\Commands\SelectMailbox($mailbox));
     }
 
+    public function getMessageHeaders(int $fromUid, int $toUid = null) : \Evt\Imap\Structures\MessageHeaders
+    {
+        return $this->executeCommand(new \Evt\Imap\Commands\GetMessageHeaders($fromUid, $toUid));
+    }
+
     /**
      * Method that logs the user in if this is not the case already
      */
