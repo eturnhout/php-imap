@@ -62,11 +62,11 @@ class Cli extends AbstractClient
     /**
      * Evt\Imap\Cli
      *
-     * @param Evt\Mail\Config\ImapConfig $config Configurations needed to connect and login to an imap server
+     * @param Evt\Imap\Config $config Configurations needed to connect and login to an imap server
      */
     public function __construct(Config $config)
     {
-        $this->setConfig($config);
+        parent::__construct($config);
         $this->debug = false;
     }
 
@@ -77,11 +77,13 @@ class Cli extends AbstractClient
      */
     public function connect()
     {
-        $address = ($this->config->isSsl()) ? 'ssl://' . $this->config->getHost() . ':' . $this->config->getPort() : $this->config->getHost() . ':' . $this->config->getPort();
+        $connectionConfig = $this->getConfig()->getConnectionConfig();
+        $address = $connectionConfig->getHost() . ':' . $connectionConfig->getPort();
+        $fullAddress = $connectionConfig->usesSsl() ? 'ssl://' . $address : $address;
 
-        $this->socket = stream_socket_client($address);
+        $this->socket = stream_socket_client($fullAddress);
 
-        if (! is_resource($this->socket)) {
+        if ( ! is_resource($this->socket)) {
             throw new \Exception(__METHOD__ . '; There was a problem creating the socket.');
         }
 
@@ -97,11 +99,11 @@ class Cli extends AbstractClient
      */
     public function disconnect()
     {
-        if (! is_resource($this->socket)) {
+        if ( ! is_resource($this->socket)) {
             throw new \Exception(__METHOD__ . '; No need to disconnect, no connection was found.');
         }
 
-        if (! fclose($this->socket)) {
+        if ( ! fclose($this->socket)) {
             throw new \Exception(__METHOD__ . '; Unable to disconnect.');
         }
     }
@@ -111,16 +113,17 @@ class Cli extends AbstractClient
      */
     public function login()
     {
-        if (! is_resource($this->socket)) {
+        if ( ! is_resource($this->socket)) {
             $this->connect();
         }
 
         $command = 'CAPABILITY';
         $this->sendCommand($command);
         $response = $this->read();
+        $credentialsConfig = $this->getConfig()->getCredentialsConfig();
 
-        if (strpos($response, 'AUTH=XOAUTH2') !== false && $this->config->isOauth()) {
-            $credentials = base64_encode("user=" . $this->config->getUsername() . "\1auth=Bearer " . $this->config->getKey() . "\1\1");
+        if (strpos($response, 'AUTH=XOAUTH2') !== false && $credentialsConfig->usesOauth()) {
+            $credentials = base64_encode("user=" . $credentialsConfig->getUsername() . "\1auth=Bearer " . $credentialsConfig->getKey() . "\1\1");
             $command = "AUTHENTICATE XOAUTH2 " . $credentials;
 
             $this->sendCommand($command);
@@ -134,8 +137,8 @@ class Cli extends AbstractClient
             if (is_null($response)) {
                 throw new \Exception(__METHOD__ . '; Unable to login.');
             }
-        } elseif (! $this->config->isOauth()) {
-            $credentials = $this->config->getUsername() . " " . $this->config->getKey();
+        } else if ( ! $credentialsConfig->usesOauth()) {
+            $credentials = $credentialsConfig->getUsername() . " " . $credentialsConfig->getKey();
 
             $this->sendCommand("LOGIN " . $credentials);
             $response = $this->read();

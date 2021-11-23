@@ -1,34 +1,59 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Evt\Imap;
 
-use Evt\Imap\Config\AbstractConfig;
+use Evt\Imap\Config\Connection as ConnectionConfig;
+use Evt\Imap\Config\Credentials as CredentialsConfig;;
 
 /**
  * Evt\Imap\Config
  *
- * Configurations for imap interactions
+ * Configuration for imap interactions
  *
  * @author Eelke van Turnhout <eelketurnhout3@gmail.com>
  * @version 1.0
  */
-class Config extends AbstractConfig
+class Config
 {
-    use \Evt\Imap\Config\Traits\UsesOauthTrait, \Evt\Imap\Config\Traits\UsesSslTrait;
+    /**
+     * @var \Evt\Imap\Config\Connection
+     */
+    private $connectionConfig;
+
+    /**
+     * @var \Evt\Imap\Config\Credentials
+     */
+    private $credentialsConfig;
 
     /**
      * Evt\Imap\Config
      *
-     * @param string    $host       The host to connect to
-     * @param int       $port       The port to connect to
-     * @param string    $username   The username to use to login with
-     * @param string    $key        Password or access token to use when login in
-     * @param boolean   $ssl        Whether or not the connection is made via ssl (Secure Sockets Layer)
-     * @param boolean   $oauth      Whether or not it uses oauth to grant access
+     * @param \Evt\Imap\Config\Connection
+     * @param \Evt\Imap\Config\Credentials
      */
-    public function __construct($host, $port, $username, $key, $ssl, $oauth)
+    public function __construct(ConnectionConfig $connectionConfig, CredentialsConfig $credentialsConfig)
     {
-        parent::__construct($host, $port, $username, $key);
-        $this->usesSsl($ssl);
-        $this->usesOauth($oauth);
+        $this->setConnectionConfig($connectionConfig);
+        $this->setCredentialsConfig($credentialsConfig);
+    }
+
+    public function setConnectionConfig(ConnectionConfig $connectionConfig) : void
+    {
+        $this->connectionConfig = $connectionConfig;
+    }
+
+    public function getConnectionConfig() : ConnectionConfig
+    {
+        return $this->connectionConfig;
+    }
+
+    public function setCredentialsConfig(CredentialsConfig $credentialsConfig) : void
+    {
+        $this->credentialsConfig = $credentialsConfig;
+    }
+
+    public function getCredentialsConfig() : CredentialsConfig
+    {
+        return $this->credentialsConfig;
     }
 }

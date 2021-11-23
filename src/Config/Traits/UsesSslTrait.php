@@ -1,7 +1,6 @@
-<?php
-namespace Evt\Imap\Config\Traits;
+<?php declare(strict_types=1);
 
-use Evt\Util\Validator as Validate;
+namespace Evt\Imap\Config\Traits;
 
 /**
  * UsesSslTrait
@@ -16,23 +15,20 @@ trait UsesSslTrait
     /**
      * Used to track whether or not ssl is used
      *
-     * @var boolean
+     * @var bool
      */
     protected $ssl;
 
     /**
      * Getter/setter function
      *
-     * @param boolean $ssl (optional) Leave empty to get the value or pass a boolean to set the value (also returns it)
+     * @param bool $ssl (optional) Leave empty to get the value or pass a boolean to set the value
      *
-     * @return boolean Returns the current status of the ssl property
-     *
-     * @throws \InvalidArgumentException When the ssl param is passed as a non boolean value
+     * @return bool Returns the current status of the ssl property
      */
-    public function usesSsl($ssl = null)
+    public function usesSsl(?bool $ssl = null) : bool
     {
-        if (! is_null($ssl)) {
-            Validate::boolean("ssl", $ssl, __METHOD__);
+        if ( ! is_null($ssl)) {
             $this->ssl = $ssl;
         }
 
