@@ -2,7 +2,9 @@
 
 namespace Evt\Imap\Parsers;
 
-use Evt\Imap\Parser;
+use Evt\Imap\Parsers\Helpers\Envelope as EnvelopeParser;
+use Evt\Imap\Parsers\Helpers\BodyStructure as BodyStructureParser;
+use Evt\Imap\Parsers\Helpers\Flags as FlagsParser;
 use Evt\Imap\Structures\Message\Header as MessageHeader;
 use Evt\Imap\Structures\MessageHeaders;
 
@@ -44,7 +46,7 @@ class GetMessageHeaders implements ParserInterface
 
             $rawEnvelope = mb_substr($decodedLine, $envelopeStart, $envelopeEnd - $envelopeStart);
             $decodedLine = str_replace($rawEnvelope, "", $decodedLine);
-            $envelope = Parser::parseEnvelope($rawEnvelope);
+            $envelope = EnvelopeParser::parse($rawEnvelope);
 
             // Parse the bodystructure
             $bodystructureStart = strpos($decodedLine, "BODYSTRUCTURE");
@@ -55,12 +57,12 @@ class GetMessageHeaders implements ParserInterface
             }
 
             $decodedLine = str_replace($rawBodystructure, "", $decodedLine);
-            $bodystructure = Parser::parseBodystructure($rawBodystructure);
+            $bodystructure = BodyStructureParser::parse($rawBodystructure);
 
             // Parse the flags
             $flagsStart = strpos($decodedLine, "FLAGS");
             $rawFlags = substr($decodedLine, $flagsStart);
-            $flags = Parser::parseFlags($rawFlags);
+            $flags = FlagsParser::parse($rawFlags);
 
             $messageHeaders->push(new MessageHeader($uid, $envelope, $bodystructure, $flags));
         }
