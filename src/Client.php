@@ -44,7 +44,7 @@ class Client
         $this->cli = new Cli($config);
     }
 
-    public function executeCommand(\Evt\Imap\Commands\AbstractCommand $command) : \Evt\Imap\Structures\StructureInterface
+    public function executeCommand(\Evt\Imap\Commands\CommandInterface $command) : \Evt\Imap\Structures\StructureInterface
     {
         $this->login();
 

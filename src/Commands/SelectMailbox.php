@@ -7,7 +7,7 @@ use Evt\Imap\Parsers\ParserInterface;
 /**
  * Select a mailbox to interact with
  */
-class SelectMailbox extends AbstractCommand
+class SelectMailbox extends AbstractCommand implements CommandInterface
 {
     protected $mailbox;
 

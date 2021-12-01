@@ -5,8 +5,6 @@ namespace Evt\Imap\Commands;
 abstract class AbstractCommand
 {
     protected $debug = false;
-    abstract public function getCommand() : string;
-    abstract public function getParser() : \Evt\Imap\Parsers\ParserInterface;
 
     public function debugEnabled()
     {

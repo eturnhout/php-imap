@@ -8,7 +8,7 @@ use Evt\Imap\Parsers\ParserInterface;
 /**
  * Get a range of message headers
  */
-class GetMessageHeaders extends AbstractCommand
+class GetMessageHeaders extends AbstractCommand implements CommandInterface
 {
     protected $fromUid;
     protected $toUid;

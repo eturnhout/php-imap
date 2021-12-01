@@ -10,7 +10,7 @@ use Evt\Imap\Parsers\ParserInterface;
  * Runs the LIST command described in rfc3501#section-6.3.8
  *
  */
-class ListMailboxes extends AbstractCommand
+class ListMailboxes extends AbstractCommand implements CommandInterface
 {
     protected $referenceName;
     protected $mailboxName;
