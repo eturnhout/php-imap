@@ -1,7 +1,6 @@
-<?php
-namespace Evt\Imap\Config\Traits;
+<?php declare(strict_types=1);
 
-use Evt\Util\Validator as Validate;
+namespace Evt\Imap\Config\Traits;
 
 /**
  * UsesOauthTrait
@@ -16,23 +15,20 @@ trait UsesOauthTrait
     /**
      * Used to track whether or not oauth is used
      *
-     * @var boolean
+     * @var bool
      */
     protected $oauth;
 
     /**
      * Getter/setter function
      *
-     * @param boolean $oauth (optional) Leave empty to get the value or pass a boolean to set the value (also returns it)
+     * @param bool $oauth (optional) Leave empty to get the value or pass a boolean to set the value (also returns it)
      *
-     * @return boolean Returns the current status of the oauth property
-     *
-     * @throws \InvalidArgumentException When the oauth param is passed as a non boolean value
+     * @return bool Returns the current status of the oauth property
      */
-    public function usesOauth($oauth = null)
+    public function usesOauth(?bool $oauth = null) : bool
     {
-        if (! is_null($oauth)) {
-            Validate::boolean("oauth", $oauth, __METHOD__);
+        if ( ! is_null($oauth)) {
             $this->oauth = $oauth;
         }
 

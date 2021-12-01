@@ -1,5 +1,8 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Evt\Imap\Client;
+
+use Evt\Imap\Config;
 
 /**
  * AbstractClient
@@ -11,12 +14,19 @@ namespace Evt\Imap\Client;
  */
 abstract class AbstractClient
 {
+    private $config;
+
+    public function __construct(Config $config)
+    {
+        $this->setConfig($config);
+    }
+
     /**
      * Set the configurations
      *
-     * @param \Evt\Imap\Config\AbstractConfig $config The configurations with credentials
+     * @param \Evt\Imap\Config $config The configurations with credentials
      */
-    public function setConfig(\Evt\Imap\Config\AbstractConfig $config)
+    public function setConfig(Config $config) : void
     {
         $this->config = $config;
     }
@@ -24,9 +34,9 @@ abstract class AbstractClient
     /**
      * Get the configurations
      *
-     * @return Evt\Util\Client\AbstractConfig
+     * @return Evt\Imap\Config
      */
-    public function getConfig()
+    public function getConfig() : Config
     {
         return $this->config;
     }
