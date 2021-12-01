@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Evt\Imap;
 
 use Evt\Imap\Config;
@@ -23,7 +24,6 @@ use Evt\Util\Validator as Validate;
  */
 class Client
 {
-
     /**
      * Object for imap server interactions
      *
@@ -55,31 +55,13 @@ class Client
         $this->cli = new Cli($config);
     }
 
-    /**
-     * Get a list of available mailboxes
-     *
-     * @return array A array filled with the available mailbox names and the folder delimiter
-     */
-    public function listMailboxes()
+    public function executeCommand(\Evt\Imap\Commands\AbstractCommand $command)
     {
         $this->login();
-        $response = $this->cli->list();
 
-        // Get the delimiter
-        $delimiterPos = strpos($response, "\"") + 1;
-        $delimiter = substr($response, $delimiterPos, 1);
+        $response = $this->cli->execute($command);
 
-        $lines = explode("\r\n", $response);
-        $mailboxes = array();
-        $mailboxes["delimiter"] = $delimiter;
-        $needle = "\" ";
-
-        foreach ($lines as $line) {
-            $mailbox = str_replace("\"", "", substr($line, strpos($line, $needle), strlen($line)));
-            $mailboxes[] = trim($mailbox);
-        }
-
-        return $mailboxes;
+        return $command->getParser()->parse($response);
     }
 
     /**

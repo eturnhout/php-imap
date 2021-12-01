@@ -1,9 +1,7 @@
 <?php
 namespace Evt\Imap;
 
-use Evt\Util\Client\AbstractConfig;
-use Evt\Util\Client\Config\UsesOauthTrait;
-use Evt\Util\Client\Config\UsesSslTrait;
+use Evt\Imap\Config\AbstractConfig;
 
 /**
  * Evt\Imap\Config
@@ -15,8 +13,7 @@ use Evt\Util\Client\Config\UsesSslTrait;
  */
 class Config extends AbstractConfig
 {
-
-    use UsesOauthTrait, UsesSslTrait;
+    use \Evt\Imap\Config\Traits\UsesOauthTrait, \Evt\Imap\Config\Traits\UsesSslTrait;
 
     /**
      * Evt\Imap\Config
