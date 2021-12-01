@@ -1,14 +1,14 @@
 <?php
 namespace Evt\Imap;
 
-use Evt\Imap\Structure\Envelope;
-use Evt\Imap\Structure\AddressStack as Addresses;
-use Evt\Imap\Structure\Address;
-use Evt\Imap\Structure\Body\Structure as Bodystructure;
-use Evt\Imap\Structure\Body\InfoStack as BodyInfoStack;
-use Evt\Imap\Structure\Body\Info as BodyInfo;
-use Evt\Imap\Structure\Message\Info as MessageInfo;
-use Evt\Imap\Structure\Attachment as AttachmentInfo;
+use Evt\Imap\Structures\Envelope;
+use Evt\Imap\Structures\Addresses;
+use Evt\Imap\Structures\Address;
+use Evt\Imap\Structures\Body\Structure as Bodystructure;
+use Evt\Imap\Structures\Body\InfoStack as BodyInfoStack;
+use Evt\Imap\Structures\Body\Info as BodyInfo;
+use Evt\Imap\Structures\Message\Info as MessageInfo;
+use Evt\Imap\Structures\Attachment as AttachmentInfo;
 
 /**
  * Evt\Imap\Parser
@@ -20,16 +20,15 @@ use Evt\Imap\Structure\Attachment as AttachmentInfo;
  */
 class Parser
 {
-
     /**
      * Parses a raw envelope returned by a imap server and converts it to a Envelope object
      * This follows the structure described in rfc3501#section-7.4.2
      *
      * @param string $envelope The raw envelope string
      *
-     * @return Evt\Imap\Structure\Envelope
+     * @return Evt\Imap\Structures\Envelope
      */
-    public static function parseEnvelope($envelope)
+    public static function parseEnvelope($envelope) : Envelope
     {
         $nil = "NIL";
         $rawEnvelope = trim(trim(trim(substr($envelope, strpos($envelope, "ENVELOPE") + strlen("ENVELOPE"), strlen($envelope))), "("), ")");
@@ -199,9 +198,9 @@ class Parser
      *
      * @param string $addresses The raw address string from (( to ))
      *
-     * @return Evt\Imap\Structure\Addresses
+     * @return Evt\Imap\Structures\Addresses
      */
-    protected static function parseAddresses($addresses)
+    protected static function parseAddresses($addresses) : Addresses
     {
         $trimmedAddresses = trim(trim($addresses), "()");
         $addressStack = new Addresses();
@@ -235,9 +234,9 @@ class Parser
      *
      * @param string $address Raw address string without the parenthesis
      *
-     * @return Evt\Imap\Structure\Address
+     * @return Evt\Imap\Structures\Address
      */
-    protected static function parseAddress($address)
+    protected static function parseAddress($address) : Address
     {
         $nil = "NIL";
         $startNeedle = "\"";
