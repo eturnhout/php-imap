@@ -11,7 +11,7 @@ class SelectMailbox implements ParserInterface
         $this->setMailbox($mailbox);
     }
 
-    public function parse(string $string) : \Evt\Imap\Structures\StructureInterface
+    public function parse(string $string) : \Evt\Imap\Structures\Mailbox
     {
         $lines = explode("\r\n", $string);
 

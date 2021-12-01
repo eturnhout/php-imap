@@ -10,7 +10,7 @@ use Evt\Imap\Structures\MessageHeaders;
 
 class GetMessageHeaders implements ParserInterface
 {
-    public function parse(string $string) : \Evt\Imap\Structures\StructureInterface
+    public function parse(string $string) : \Evt\Imap\Structures\MessageHeaders
     {
         $lines = explode("\r\n", $string);
 
