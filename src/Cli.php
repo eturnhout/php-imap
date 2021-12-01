@@ -3,6 +3,7 @@ namespace Evt\Imap;
 
 use Evt\Imap\Config;
 use Evt\Imap\Client\AbstractClient;
+use Evt\Imap\Commands\UntaggedCommandInterface;
 
 /**
  * Evt\Imap\Cli
@@ -249,7 +250,7 @@ class Cli extends AbstractClient
 
     public function execute(\Evt\Imap\Commands\AbstractCommand $command) : \Evt\Imap\Structures\StructureInterface
     {
-        if ($command->isUntagged()) {
+        if ($command instanceof UntaggedCommandInterface) {
             $fullCommand = $command . "\r\n";
         } else {
             $this->tagLine ++;
@@ -266,7 +267,7 @@ class Cli extends AbstractClient
 
         $response = $this->read($command->debugEnabled());
 
-        if ( ! $command->isUntagged()) {
+        if ( ! $command instanceof UntaggedCommandInterface) {
             $response = $this->stripTag($response);
         }
 
