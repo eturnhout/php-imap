@@ -4,6 +4,11 @@ A pure php imap implementation. No need for the php imap extension. (work in pro
 ## Examples
 ### Creating the client instance
 <pre>
+use Evt\Imap\Client;
+use Evt\Imap\Config as ImapConfig;
+use Evt\Imap\Config\Connection as ConnectionConfig;
+use Evt\Imap\Config\Credentials as CredentialsConfig;
+
 $host = '{host}';
 $port = 993;
 $ssl = true;
