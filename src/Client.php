@@ -51,6 +51,27 @@ class Client
         return $this->cli->execute($command);
     }
 
+    public function listMailboxes(string $referenceName = '', string $mailboxName = '*') : \Evt\Imap\Structures\Mailboxes
+    {
+        return $this->executeCommand(new \Evt\Imap\Commands\ListMailboxes($referenceName, $mailboxName));
+    }
+
+    public function selectMailbox(string $mailbox) : \Evt\Imap\Structures\Mailbox
+    {
+        return $this->executeCommand(new \Evt\Imap\Commands\SelectMailbox($mailbox));
+    }
+
+    /**
+     * Method that logs the user in if this is not the case already
+     */
+    protected function login()
+    {
+        if (! $this->loggedIn) {
+            $this->cli->login();
+            $this->loggedIn = true;
+        }
+    }
+
     /**
      * Get a message with it's envelope and body parts
      *
@@ -58,7 +79,7 @@ class Client
      *
      * @return Evt\Imap\Structure\Message
      */
-    public function getMessage($uid)
+    /*public function getMessage($uid)
     {
         Validate::integer("uid", $uid, __METHOD__);
         $this->login();
@@ -109,16 +130,5 @@ class Client
         }
 
         return new Message($messageHeader->getEnvelope(), $bodyParts);
-    }
-
-    /**
-     * Method that logs the user in if this is not the case already
-     */
-    protected function login()
-    {
-        if (! $this->loggedIn) {
-            $this->cli->login();
-            $this->loggedIn = true;
-        }
-    }
+    }*/
 }
