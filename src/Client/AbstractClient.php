@@ -50,14 +50,4 @@ abstract class AbstractClient
      * Disconnect from the server
      */
     abstract public function disconnect();
-
-    /**
-     * Login to the server
-     */
-    abstract public function login();
-
-    /**
-     * Logout from the server
-     */
-    abstract public function logout();
 }
