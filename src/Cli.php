@@ -110,49 +110,6 @@ class Cli extends AbstractClient
     }
 
     /**
-     * Login with the username and key provided by the configurations
-     */
-    public function login()
-    {
-        if ( ! is_resource($this->socket)) {
-            $this->connect();
-        }
-
-        $command = 'CAPABILITY';
-        $this->sendCommand($command);
-        $response = $this->read();
-        $credentialsConfig = $this->getConfig()->getCredentialsConfig();
-
-        if (strpos($response, 'AUTH=XOAUTH2') !== false && $credentialsConfig->usesOauth()) {
-            $credentials = base64_encode("user=" . $credentialsConfig->getUsername() . "\1auth=Bearer " . $credentialsConfig->getKey() . "\1\1");
-            $command = "AUTHENTICATE XOAUTH2 " . $credentials;
-
-            $this->sendCommand($command);
-            $response = $this->read();
-
-            if (strrpos($response, '+') === 0) {
-                $this->sendCommand('', true);
-                $response = $this->read();
-            }
-
-            if (is_null($response)) {
-                throw new \Exception(__METHOD__ . '; Unable to login.');
-            }
-        } else if ( ! $credentialsConfig->usesOauth()) {
-            $credentials = $credentialsConfig->getUsername() . " " . $credentialsConfig->getKey();
-
-            $this->sendCommand("LOGIN " . $credentials);
-            $response = $this->read();
-
-            if (is_null($response)) {
-                throw new \Exception(__METHOD__ . "; Login failed.");
-            }
-        } else {
-            throw new \Exception(__METHOD__ . '; The imap class can\'t find a supported authentication method on this server.');
-        }
-    }
-
-    /**
      * Logout from the server
      * This may dosconnect and an exception will be thrown when trying to use the disconnect method
      *
