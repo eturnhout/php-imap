@@ -112,30 +112,6 @@ class Cli
     }
 
     /**
-     * Logout from the server
-     * This may dosconnect and an exception will be thrown when trying to use the disconnect method
-     *
-     * @throws \Exception
-     */
-    public function logout()
-    {
-        if (! is_resource($this->socket)) {
-            throw new \Exception(__METHOD__ . '; No connection was found.');
-        }
-
-        $this->sendCommand('LOGOUT');
-        $response = $this->read();
-
-        if (is_null($response)) {
-            throw new \Exception(__METHOD__ . '; Logout failed.');
-        }
-
-        if (! fclose($this->socket)) {
-            throw new \Exception(__METHOD__ . ': Failed to close socket connection.');
-        }
-    }
-
-    /**
      * Get a list of subscribed mailboxes and the hierarchy delimiter
      * Runs the LSUB command described in rfc3501#section-6.3.9
      *
