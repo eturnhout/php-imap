@@ -2,7 +2,7 @@
 
 namespace Evt\Imap\Config\Login;
 
-class XOauth2 implements TypeInterface
+final class XOauth2 implements TypeInterface
 {
     public function name(): string
     {

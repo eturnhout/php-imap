@@ -2,7 +2,7 @@
 
 namespace Evt\Imap\Config\Login;
 
-class Plain implements TypeInterface
+final class Plain implements TypeInterface
 {
     public function name(): string
     {
