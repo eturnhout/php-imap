@@ -2,4 +2,4 @@
 
 namespace Evt\Imap\Structures\Capability;
 
-class XOauth2 extends AbstractCapability {}
+final class XOauth2 extends AbstractCapability {}

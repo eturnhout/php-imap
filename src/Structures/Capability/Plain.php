@@ -2,4 +2,4 @@
 
 namespace Evt\Imap\Structures\Capability;
 
-class Plain extends AbstractCapability {}
+final class Plain extends AbstractCapability {}
