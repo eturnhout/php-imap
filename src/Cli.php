@@ -5,7 +5,7 @@ use Evt\Imap\Config\Connection as ConnectionConfig;
 use Evt\Imap\Commands\UntaggedCommandInterface;
 
 /**
- * Evt\Imap\Cli
+ * \Evt\Imap\Cli
  *
  * Connect and interact with an imap server through a socket connection
  *
@@ -112,42 +112,6 @@ class Cli
     }
 
     /**
-     * Get a list of subscribed mailboxes and the hierarchy delimiter
-     * Runs the LSUB command described in rfc3501#section-6.3.9
-     *
-     * @param string $referenceName (optional) Reference name
-     * @param string $mailboxName   (optional) Mailbox name with possible wildcards
-     *
-     * @return string The LSUB response from the server
-     *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
-     */
-    public function lsub($referenceName = '', $mailboxName = '*')
-    {
-        if (! is_string($referenceName)) {
-            throw new \InvalidArgumentException(__METHOD__ . "; The reference name must be a non empty string.");
-        }
-
-        if (! is_string($mailboxName)) {
-            throw new InvalidArgumentException(__METHOD__ . "; The mailbox name must be a string.");
-        }
-
-        $command = 'LSUB "' . $referenceName . '" "' . $mailboxName . '"';
-        $this->sendCommand($command);
-
-        $response = $this->read();
-
-        if (is_null($response)) {
-            throw new \Exception(__METHOD__ . '; Unable to list the mailboxes.');
-        }
-
-        $strippedResponse = $this->stripTag($response);
-
-        return $strippedResponse;
-    }
-
-    /**
      * Print the in/output commands
      *
      * @return string The commands and responses
@@ -155,32 +119,6 @@ class Cli
     public function printDebugOutput()
     {
         echo $this->debugOutput;
-    }
-
-    /**
-     * Send a command to the server
-     *
-     * @param string    $command    One of the commands described in rfc3501
-     *                              NOTE: Do not pass a unique tag when extending this class, this is handled by the class itself
-     * @param boolean   $untagged   Sometimes the server waits for input that doesn't require a tag e.g a simple newline
-     *                              Set this to true if this is expected
-     */
-    protected function sendCommand($command, $untagged = false)
-    {
-        if ($untagged) {
-            $fullCommand = $command . "\r\n";
-        } else {
-            $this->tagLine ++;
-            $fullCommand = self::TAG_PREFIX . $this->tagLine . ' ' . $command . "\r\n";
-        }
-
-        if ($this->debug) {
-            $this->debugOutput .= $fullCommand;
-        }
-
-        if (! fwrite($this->socket, $fullCommand)) {
-            throw new Exception(__METHOD__ . '; Unable to write to socket.');
-        }
     }
 
     public function execute(\Evt\Imap\Commands\CommandInterface $command) : \Evt\Imap\Structures\StructureInterface
