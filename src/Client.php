@@ -70,20 +70,22 @@ class Client
         return $this->executeCommand(new \Evt\Imap\Commands\GetMessageHeaders($fromUid, $toUid));
     }
 
-    /**
-     * Method that logs the user in if this is not the case already
-     */
-    public function login()
+    public function login(): \Evt\Imap\Structures\Login
     {
         /** @var \Evt\Imap\Structures\CapabilityStack */
         $capabilityStack = $this->executeCommand(new \Evt\Imap\Commands\LoginCapability());
         $credentials = $this->config->getCredentialsConfig();
 
         if ($capabilityStack->has($credentials->getLoginType())) {
-            $loginResponse = $this->executeCommand(new \Evt\Imap\Commands\Login($credentials));
+            return $this->executeCommand(new \Evt\Imap\Commands\Login($credentials));
         } else {
             throw new \Exception($credentials->getLoginType()->name() . " login no supported");
         }
+    }
+
+    public function logout(): \Evt\Imap\Structures\Logout
+    {
+        return $this->executeCommand(new \Evt\Imap\Commands\Logout());
     }
 
     /**
