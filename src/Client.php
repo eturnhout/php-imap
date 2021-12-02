@@ -50,7 +50,7 @@ class Client
         $this->cli = new Cli($config);
     }
 
-    public function executeCommand(\Evt\Imap\Commands\CommandInterface $command) : \Evt\Imap\Structures\StructureInterface
+    public function executeCommand(\Evt\Imap\Commands\CommandInterface $command): \Evt\Imap\Structures\StructureInterface
     {
         return $this->cli->execute($command);
     }
@@ -75,12 +75,14 @@ class Client
      */
     public function login()
     {
-        $response = $this->executeCommand(new \Evt\Imap\Commands\LoginCapability());
+        /** @var \Evt\Imap\Structures\CapabilityStack */
+        $capabilityStack = $this->executeCommand(new \Evt\Imap\Commands\LoginCapability());
+        $credentials = $this->config->getCredentialsConfig();
 
-        if ($response instanceof \Evt\Imap\Structures\Capability\XOauth2) {
-            $loginResponse = $this->executeCommand(new \Evt\Imap\Commands\LoginXOauth2($this->config->getCredentialsConfig()));
+        if ($capabilityStack->has($credentials->getLoginType())) {
+            $loginResponse = $this->executeCommand(new \Evt\Imap\Commands\Login($credentials));
         } else {
-
+            throw new \Exception($credentials->getLoginType()->name() . " login no supported");
         }
     }
 

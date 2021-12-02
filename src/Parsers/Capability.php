@@ -4,16 +4,22 @@ namespace Evt\Imap\Parsers;
 
 class Capability implements ParserInterface
 {
-    public function parse(?string $response): \Evt\Imap\Structures\Capability\AbstractCapability
+    public function parse(?string $response): \Evt\Imap\Structures\CapabilityStack
     {
         if ( ! $response) {
             throw new \Exception("No login capabilities returned");
         }
 
+        $capabilityStack = new \Evt\Imap\Structures\CapabilityStack();
+
         if (strpos($response, 'AUTH=XOAUTH2') !== false) {
-            return new \Evt\Imap\Structures\Capability\XOauth2();
-        } else {
-            return new \Evt\Imap\Structures\Capability\Plain();
+            $capabilityStack->push(new \Evt\Imap\Config\Login\XOauth2());
         }
+
+        if (strpos($response, 'AUTH=PLAIN')) {
+            $capabilityStack->push(new \Evt\Imap\Config\Login\Plain());
+        }
+
+        return $capabilityStack;
     }
 }
