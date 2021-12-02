@@ -2,7 +2,6 @@
 namespace Evt\Imap;
 
 use Evt\Imap\Config\Connection as ConnectionConfig;
-use Evt\Imap\Client\AbstractClient;
 use Evt\Imap\Commands\UntaggedCommandInterface;
 
 /**
@@ -13,7 +12,7 @@ use Evt\Imap\Commands\UntaggedCommandInterface;
  * @author Eelke van Turnhout <eelketurnhout3@gmail.com>
  * @version 1.0
  */
-class Cli extends AbstractClient
+class Cli
 {
     /**
      * Every command to the imap server needs a unique tag
