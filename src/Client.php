@@ -90,7 +90,10 @@ class Client
 
     public function logout(): \Evt\Imap\Structures\Logout
     {
-        return $this->executeCommand(new \Evt\Imap\Commands\Logout());
+        $response = $this->executeCommand(new \Evt\Imap\Commands\Logout());
+        $this->cli->disconnect();
+
+        return $response;
     }
 
     /**
