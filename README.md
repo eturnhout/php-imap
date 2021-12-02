@@ -11,14 +11,14 @@ use Evt\Imap\Config\Credentials as CredentialsConfig;
 
 $host = '{host}';
 $port = 993;
-$ssl = true;
+$protocol = new \Evt\Imap\Config\Connection\Ssl(); // Tsl also available
 
 $username = '{your_email_address}';
 $key = '{your_password_or_acces_token}';
-$oauth = true; // or false for plain password
+$loginType = new \Evt\Imap\Config\Login\Plain(); // See Config/Login for alternative options
 
-$connectionConfig = new ConnectionConfig($host, $port, $ssl);
-$credentialsConfig = new CredentialsConfig($username, $key, $oauth);
+$connectionConfig = new ConnectionConfig($host, $port, $protocol);
+$credentialsConfig = new CredentialsConfig($username, $key, $loginType);
 $imapConfig = new ImapConfig($connectionConfig, $credentialsConfig);
 
 $client = new Client($imapConfig);
