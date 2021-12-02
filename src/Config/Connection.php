@@ -2,50 +2,45 @@
 
 namespace Evt\Imap\Config;
 
+use Evt\Imap\Config\Connection\ProtocolInterface;
+
 /**
  * Used to specify connection info
  *
  * @author Eelke van Turnhout <eelketurnhout3@gmail.com>
  * @version 1.0
  */
-class Connection
+final class Connection
 {
-    use Traits\UsesSslTrait;
-
     /**
      * The host
      *
      * @var string
      */
-    protected $host;
+    private $host;
 
     /**
      * The port to connect to
      *
      * @var int
      */
-    protected $port;
+    private $port;
+
+    /**'
+     * @var ProtocolInterface
+     */
+    private $protocol;
 
     /**
-     * @param string    $host   The host to connect to
-     * @param int       $port   The port to connect to
-     * @param bool      $ssl    Specify if the connection is over ssl
+     * @param string            $host       The host to connect to
+     * @param int               $port       The port to connect to
+     * @param ProtocolInterface $protocol   Specify the connection protocol
      */
-    public function __construct(string $host, int $port, bool $ssl)
-    {
-        $this->setHost($host);
-        $this->setPort($port);
-        $this->usesSsl($ssl);
-    }
-
-    /**
-     * Set the host
-     *
-     * @param string $host The host to connect to
-     */
-    public function setHost(string $host) : void
+    public function __construct(string $host, int $port, ProtocolInterface $protocol)
     {
         $this->host = $host;
+        $this->port = $port;
+        $this->protocol = $protocol;
     }
 
     /**
@@ -59,16 +54,6 @@ class Connection
     }
 
     /**
-     * Set the port
-     *
-     * @param int $port The port to connect to
-     */
-    public function setPort(int $port) : void
-    {
-        $this->port = $port;
-    }
-
-    /**
      * Get the port
      *
      * @return The port as an integer
@@ -76,5 +61,10 @@ class Connection
     public function getPort() : int
     {
         return $this->port;
+    }
+
+    public function getProtocol(): ProtocolInterface
+    {
+        return $this->protocol;
     }
 }

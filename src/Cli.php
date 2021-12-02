@@ -80,7 +80,7 @@ class Cli extends AbstractClient
     {
         $connectionConfig = $this->getConfig()->getConnectionConfig();
         $address = $connectionConfig->getHost() . ':' . $connectionConfig->getPort();
-        $fullAddress = $connectionConfig->usesSsl() ? 'ssl://' . $address : $address;
+        $fullAddress = $connectionConfig->getProtocol()->name() .  '://' . $address;
 
         $this->socket = stream_socket_client($fullAddress);
 
