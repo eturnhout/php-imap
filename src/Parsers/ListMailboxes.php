@@ -19,8 +19,8 @@ class ListMailboxes implements ParserInterface
         $needle = "\" ";
 
         foreach ($lines as $line) {
-            $mailbox = str_replace("\"", "", substr($line, strpos($line, $needle), strlen($line)));
-            $mailboxes[] = trim($mailbox);
+            $mailbox = trim(str_replace("\"", "", substr($line, strpos($line, $needle), strlen($line))));
+            $mailboxes[] = \mb_convert_encoding($mailbox,"UTF-8", "UTF7-IMAP");
         }
 
         return new \Evt\Imap\Structures\Mailboxes($delimiter, $mailboxes);
