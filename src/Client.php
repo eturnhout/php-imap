@@ -21,9 +21,14 @@ use Evt\Util\Validator as Validate;
 class Client
 {
     /**
+     * @var \Evt\Imap\Config
+     */
+    private $config;
+
+    /**
      * Object for imap server interactions
      *
-     * @var Evt\Imap\Cli
+     * @var \Evt\Imap\Cli
      */
     protected $cli;
 
@@ -41,13 +46,12 @@ class Client
      */
     public function __construct(Config $config)
     {
+        $this->config = $config;
         $this->cli = new Cli($config);
     }
 
     public function executeCommand(\Evt\Imap\Commands\CommandInterface $command) : \Evt\Imap\Structures\StructureInterface
     {
-        $this->login();
-
         return $this->cli->execute($command);
     }
 
@@ -69,11 +73,14 @@ class Client
     /**
      * Method that logs the user in if this is not the case already
      */
-    protected function login()
+    public function login()
     {
-        if (! $this->loggedIn) {
-            $this->cli->login();
-            $this->loggedIn = true;
+        $response = $this->executeCommand(new \Evt\Imap\Commands\LoginCapability());
+
+        if ($response instanceof \Evt\Imap\Structures\Capability\XOauth2) {
+            $loginResponse = $this->executeCommand(new \Evt\Imap\Commands\LoginXOauth2($this->config->getCredentialsConfig()));
+        } else {
+
         }
     }
 
