@@ -248,10 +248,14 @@ class Cli extends AbstractClient
         }
     }
 
-    public function execute(\Evt\Imap\Commands\AbstractCommand $command) : \Evt\Imap\Structures\StructureInterface
+    public function execute(\Evt\Imap\Commands\CommandInterface $command) : \Evt\Imap\Structures\StructureInterface
     {
+        if ( ! is_resource($this->socket)) {
+            $this->connect();
+        }
+
         if ($command instanceof UntaggedCommandInterface) {
-            $fullCommand = $command . "\r\n";
+            $fullCommand = $command->getCommand() . "\r\n";
         } else {
             $this->tagLine ++;
             $fullCommand = self::TAG_PREFIX . $this->tagLine . ' ' . $command->getCommand() . "\r\n";
