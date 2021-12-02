@@ -15,6 +15,7 @@
         }
     },
     "require": {
+        "ext-mbstring": "*",
         "evt/util": "dev-master"
     }
 }

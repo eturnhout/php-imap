@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a7087da84cc290cc8ab2e2adad9058b",
+    "content-hash": "102787f3eb5224da411ca992cb3a8fd1",
     "packages": [
         {
             "name": "evt/util",
@@ -12,17 +12,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eturnhout/evt-util.git",
-                "reference": "838a5934a7612c44b8c42a36a0ffefae482ae97e"
+                "reference": "a9cbee3b39e614582d92adb6ca2b2dec7e13169f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eturnhout/evt-util/zipball/838a5934a7612c44b8c42a36a0ffefae482ae97e",
-                "reference": "838a5934a7612c44b8c42a36a0ffefae482ae97e",
+                "url": "https://api.github.com/repos/eturnhout/evt-util/zipball/a9cbee3b39e614582d92adb6ca2b2dec7e13169f",
+                "reference": "a9cbee3b39e614582d92adb6ca2b2dec7e13169f",
                 "shasum": ""
             },
             "require-dev": {
                 "phpunit/phpunit": "6.1"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -37,7 +38,11 @@
                 }
             ],
             "description": "Some (hopefully) handy code to reuse.",
-            "time": "2018-09-11T19:07:19+00:00"
+            "support": {
+                "issues": "https://github.com/eturnhout/evt-util/issues",
+                "source": "https://github.com/eturnhout/evt-util/tree/master"
+            },
+            "time": "2018-09-19T20:29:34+00:00"
         }
     ],
     "packages-dev": [],
@@ -48,6 +53,9 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": []
+    "platform": {
+        "ext-mbstring": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
 }
