@@ -2,6 +2,7 @@
     "name": "evt/mail",
     "description": "A imap client that doesn't require the php imap extension",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Eelke van Turnhout",
