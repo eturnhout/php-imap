@@ -1,7 +1,7 @@
 <?php
 namespace Evt\Imap;
 
-use Evt\Imap\Config;
+use Evt\Imap\Config\Connection as ConnectionConfig;
 use Evt\Imap\Client\AbstractClient;
 use Evt\Imap\Commands\UntaggedCommandInterface;
 
@@ -22,6 +22,11 @@ class Cli extends AbstractClient
      * @var string
      */
     const TAG_PREFIX = 'AMWIJG';
+
+    /**
+     * @var ConnectionConfig
+     */
+    private $connectionConfig;
 
     /**
      * Tag line to append to the tag prefix
@@ -61,13 +66,11 @@ class Cli extends AbstractClient
     protected $debugOutput;
 
     /**
-     * Evt\Imap\Cli
-     *
-     * @param Evt\Imap\Config $config Configurations needed to connect and login to an imap server
+     * @param ConnectionConfig $config Configurations needed to connect and login to an imap server
      */
-    public function __construct(Config $config)
+    public function __construct(ConnectionConfig $connectionConfig)
     {
-        parent::__construct($config);
+        $this->connectionConfig = $connectionConfig;
         $this->debug = false;
     }
 
@@ -78,7 +81,7 @@ class Cli extends AbstractClient
      */
     public function connect()
     {
-        $connectionConfig = $this->getConfig()->getConnectionConfig();
+        $connectionConfig = $this->connectionConfig;
         $address = $connectionConfig->getHost() . ':' . $connectionConfig->getPort();
         $fullAddress = $connectionConfig->getProtocol()->name() .  '://' . $address;
 

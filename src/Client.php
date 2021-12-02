@@ -47,7 +47,7 @@ class Client
     public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->cli = new Cli($config);
+        $this->cli = new Cli($config->getConnectionConfig());
     }
 
     public function executeCommand(\Evt\Imap\Commands\CommandInterface $command): \Evt\Imap\Structures\StructureInterface
