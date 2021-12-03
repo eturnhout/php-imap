@@ -56,9 +56,12 @@ class Client
         return $this->executeCommand(new \Evt\Imap\Commands\ListMailboxes($referenceNameInput, $mailboxNameInput));
     }
 
-    public function listSubscribedMailboxes(string $referenceName = '', string $mailboxName = '*') : \Evt\Imap\Structures\Mailboxes
+    public function listSubscribedMailboxes(?string $referenceName, ?string $mailboxName): \Evt\Imap\Structures\Mailboxes
     {
-        return $this->executeCommand(new \Evt\Imap\Commands\ListSubscribedMailboxes($referenceName, $mailboxName));
+        $referenceNameInput = $referenceName ? new Utf7ImapInput($referenceName) : null;
+        $mailboxNameInput = $mailboxName ? new Utf7ImapInput($mailboxName) : null;
+
+        return $this->executeCommand(new \Evt\Imap\Commands\ListSubscribedMailboxes($referenceNameInput, $mailboxNameInput));
     }
 
     public function selectMailbox(string $mailbox) : \Evt\Imap\Structures\Mailbox

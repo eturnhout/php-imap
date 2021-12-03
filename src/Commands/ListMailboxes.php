@@ -14,12 +14,12 @@ class ListMailboxes extends AbstractCommand implements CommandInterface
     /**
      * @var InputInterface
      */
-    private $referenceName;
+    protected $referenceName;
 
     /**
      * @var InputInterface
      */
-    private $mailboxName;
+    protected $mailboxName;
 
     /**
      * @param InputInterface $referenceName (optional) Reference name

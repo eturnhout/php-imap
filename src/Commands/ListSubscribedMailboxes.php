@@ -10,6 +10,9 @@ class ListSubscribedMailboxes extends ListMailboxes
 {
     public function getCommand(): string
     {
-        return 'LSUB "' . $this->getReferenceName() . '" "' . $this->getMailboxName() . '"';
+        $referenceName = $this->referenceName ? $this->referenceName->getInput() : '';
+        $mailboxName = $this->mailboxName ? $this->mailboxName->getInput() : '*';
+
+        return 'LSUB "' . $referenceName . '" "' . $mailboxName . '"';
     }
 }
