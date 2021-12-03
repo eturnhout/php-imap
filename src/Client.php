@@ -48,7 +48,7 @@ class Client
         return $this->cli->execute($command);
     }
 
-    public function listMailboxes(?string $referenceName, ?string $mailboxName): \Evt\Imap\Structures\Mailboxes
+    public function listMailboxes(?string $referenceName = null, ?string $mailboxName = null): \Evt\Imap\Structures\Mailboxes
     {
         $referenceNameInput = $referenceName ? new Utf7ImapInput($referenceName) : null;
         $mailboxNameInput = $mailboxName ? new Utf7ImapInput($mailboxName) : null;
@@ -56,7 +56,7 @@ class Client
         return $this->executeCommand(new \Evt\Imap\Commands\ListMailboxes($referenceNameInput, $mailboxNameInput));
     }
 
-    public function listSubscribedMailboxes(?string $referenceName, ?string $mailboxName): \Evt\Imap\Structures\Mailboxes
+    public function listSubscribedMailboxes(?string $referenceName = null, ?string $mailboxName = null): \Evt\Imap\Structures\Mailboxes
     {
         $referenceNameInput = $referenceName ? new Utf7ImapInput($referenceName) : null;
         $mailboxNameInput = $mailboxName ? new Utf7ImapInput($mailboxName) : null;
