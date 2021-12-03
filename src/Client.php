@@ -4,19 +4,12 @@ namespace Evt\Imap;
 
 use Evt\Imap\Config;
 use Evt\Imap\Cli;
-use Evt\Imap\Parser;
-use Evt\Imap\Structure\Body\PartStack as BodyParts;
-use Evt\Imap\Structure\Body\Part as BodyPart;
-use Evt\Imap\Structure\Message;
-use Evt\Util\Validator as Validate;
+use Evt\Imap\Commands\Helpers\Utf7ImapInput;
 
 /**
- * Evt\Imap\Client
- *
  * Client that communicates with a imap server and gives object responses
  *
  * @author Eelke van Turnhout <eelketurnhout3@gmail.com>
- * @version 1.0
  */
 class Client
 {
@@ -55,9 +48,12 @@ class Client
         return $this->cli->execute($command);
     }
 
-    public function listMailboxes(string $referenceName = '', string $mailboxName = '*') : \Evt\Imap\Structures\Mailboxes
+    public function listMailboxes(?string $referenceName, ?string $mailboxName): \Evt\Imap\Structures\Mailboxes
     {
-        return $this->executeCommand(new \Evt\Imap\Commands\ListMailboxes($referenceName, $mailboxName));
+        $referenceNameInput = $referenceName ? new Utf7ImapInput($referenceName) : null;
+        $mailboxNameInput = $mailboxName ? new Utf7ImapInput($mailboxName) : null;
+
+        return $this->executeCommand(new \Evt\Imap\Commands\ListMailboxes($referenceNameInput, $mailboxNameInput));
     }
 
     public function listSubscribedMailboxes(string $referenceName = '', string $mailboxName = '*') : \Evt\Imap\Structures\Mailboxes
