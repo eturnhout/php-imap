@@ -2,50 +2,49 @@
 
 namespace Evt\Imap\Structures;
 
+use Evt\Imap\Helpers\Utf7ImapToUtf8;
+
 /**
- * Evt\Imap\Structures\Mailbox
- *
  * An object that holds properties like the number of existing messages and the next estimated uid
  *
  * @author Eelke van Turnhout <eelketurnhout3@gmail.com>
- * @version 1.0
  */
-class Mailbox implements StructureInterface
+final class Mailbox implements StructureInterface
 {
     /**
      * Name of the mailbox
      *
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * The UIDVALIDITY, this is used to check if any messages have been received or removed
      *
      * @var int
      */
-    protected $uidvalidity;
+    private $uidvalidity;
 
     /**
      * The number of existing messages
      *
      * @var int
      */
-    protected $exists;
+    private $exists;
 
     /**
      * Number of recent messages
      *
      * @var int
      */
-    protected $recent;
+    private $recent;
 
     /**
      * The estimated next uid available
      *
      * @var int
      */
-    protected $uidnext;
+    private $uidnext;
 
     /**
      * Evt\Imap\Structure\Mailbox
@@ -59,10 +58,10 @@ class Mailbox implements StructureInterface
     public function __construct($name, $uidvalidity, $exists, $recent, $uidnext)
     {
         $this->setName($name);
-        $this->setUidvalidity($uidvalidity);
-        $this->setExists($exists);
-        $this->setRecent($recent);
-        $this->setUidnext($uidnext);
+        $this->uidvalidity = $uidvalidity;
+        $this->exists = $exists;
+        $this->recent = $recent;
+        $this->uidnext = $uidnext;
     }
 
     /**
@@ -70,9 +69,9 @@ class Mailbox implements StructureInterface
      *
      * @param string The name of the mailbox
      */
-    public function setName(string $name)
+    private function setName(string $name): void
     {
-        $this->name = $name;
+        $this->name = Utf7ImapToUtf8::convert($name);
     }
 
     /**
@@ -80,20 +79,9 @@ class Mailbox implements StructureInterface
      *
      * @return string The name of the mailbox
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * Set the uidvalidity
-     *
-     * @param int $uidvalidity  The uidvalidity
-     *                          Used to check if any messages have been added or removed
-     */
-    public function setUidvalidity(int $uidvalidity)
-    {
-        $this->uidvalidity = $uidvalidity;
     }
 
     /**
@@ -101,19 +89,9 @@ class Mailbox implements StructureInterface
      *
      * @return int The uidvalidity of this mailbox
      */
-    public function getUidvalidity()
+    public function getUidvalidity(): int
     {
         return $this->uidvalidity;
-    }
-
-    /**
-     * Set the number of existing messages
-     *
-     * @param int $exists The number of existing messages
-     */
-    public function setExists(int $exists)
-    {
-        $this->exists = $exists;
     }
 
     /**
@@ -121,19 +99,9 @@ class Mailbox implements StructureInterface
      *
      * @return int The number of existing messages
      */
-    public function getExists()
+    public function getExists(): int
     {
         return $this->exists;
-    }
-
-    /**
-     * Set the number of recent messages
-     *
-     * @param int $recent The number of recent messages
-     */
-    public function setRecent(int $recent)
-    {
-        $this->recent = $recent;
     }
 
     /**
@@ -141,18 +109,13 @@ class Mailbox implements StructureInterface
      *
      * @return int The number of recent messages
      */
-    public function getRecent()
+    public function getRecent(): int
     {
         return $this->recent;
     }
 
-    /**
-     * Set the uidnext value
-     *
-     * @param int $uidnext The estimated next uid
-     */
-    public function setUidnext(int $uidnext)
+    public function getUidNext(): int
     {
-        $this->uidnext = $uidnext;
+        return $this->uidnext;
     }
 }

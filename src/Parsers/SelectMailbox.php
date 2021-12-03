@@ -8,10 +8,10 @@ class SelectMailbox implements ParserInterface
 
     public function __construct(string $mailbox)
     {
-        $this->setMailbox($mailbox);
+        $this->mailbox = $mailbox;
     }
 
-    public function parse(string $string) : \Evt\Imap\Structures\Mailbox
+    public function parse(string $string): \Evt\Imap\Structures\Mailbox
     {
         $lines = explode("\r\n", $string);
 
@@ -32,18 +32,6 @@ class SelectMailbox implements ParserInterface
             }
         }
 
-        return new \Evt\Imap\Structures\Mailbox($this->getMailbox(), $uidvalidity, $exists, $recent, $uidnext);
-    }
-
-    public function setMailbox(string $mailbox) : self
-    {
-        $this->mailbox = $mailbox;
-
-        return $this;
-    }
-
-    public function getMailbox() : string
-    {
-        return $this->mailbox;
+        return new \Evt\Imap\Structures\Mailbox($this->mailbox, $uidvalidity, $exists, $recent, $uidnext);
     }
 }

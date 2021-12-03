@@ -64,9 +64,11 @@ class Client
         return $this->executeCommand(new \Evt\Imap\Commands\ListSubscribedMailboxes($referenceNameInput, $mailboxNameInput));
     }
 
-    public function selectMailbox(string $mailbox) : \Evt\Imap\Structures\Mailbox
+    public function selectMailbox(string $mailbox): \Evt\Imap\Structures\Mailbox
     {
-        return $this->executeCommand(new \Evt\Imap\Commands\SelectMailbox($mailbox));
+        $mailboxInput = new Utf7ImapInput($mailbox);
+
+        return $this->executeCommand(new \Evt\Imap\Commands\SelectMailbox($mailboxInput));
     }
 
     public function getMessageHeaders(int $fromUid, int $toUid = null) : \Evt\Imap\Structures\MessageHeaders
