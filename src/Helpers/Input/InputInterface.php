@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Evt\Imap\Commands\Helpers;
+namespace Evt\Imap\Helpers\Input;
 
 interface InputInterface
 {

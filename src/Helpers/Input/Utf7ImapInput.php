@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Evt\Imap\Commands\Helpers;
+namespace Evt\Imap\Helpers\Input;
 
-final class Utf7ImapInput implements InputInterface
+class Utf7ImapInput implements InputInterface
 {
     private $input;
 
