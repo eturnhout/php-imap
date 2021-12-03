@@ -4,7 +4,7 @@ namespace Evt\Imap;
 
 use Evt\Imap\Config;
 use Evt\Imap\Cli;
-use Evt\Imap\Commands\Helpers\Utf7ImapInput;
+use Evt\Imap\Helpers\Input\Utf7ImapInput;
 
 /**
  * Client that communicates with a imap server and gives object responses

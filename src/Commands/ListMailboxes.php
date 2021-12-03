@@ -2,7 +2,7 @@
 
 namespace Evt\Imap\Commands;
 
-use Evt\Imap\Commands\Helpers\InputInterface;
+use Evt\Imap\Helpers\Input\InputInterface;
 use Evt\Imap\Parsers\ParserInterface;
 
 /**
