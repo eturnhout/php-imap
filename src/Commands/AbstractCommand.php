@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Commands;
 
@@ -11,7 +13,7 @@ abstract class AbstractCommand
         return $this->debug;
     }
 
-    public function setDebug(bool $debug) : self
+    public function setDebug(bool $debug): self
     {
         $this->debug = $debug;
 

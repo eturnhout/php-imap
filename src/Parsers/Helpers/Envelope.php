@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers\Helpers;
 
@@ -9,12 +11,8 @@ class Envelope
     /**
      * Parses a raw envelope returned by a imap server and converts it to a Envelope object
      * This follows the structure described in rfc3501#section-7.4.2
-     *
-     * @param string $envelope The raw envelope string
-     *
-     * @return Evt\Imap\Structures\Envelope
      */
-    public static function parse($envelope) : EnvelopeStructure
+    public static function parse($envelope): EnvelopeStructure
     {
         $nil = "NIL";
         $rawEnvelope = trim(trim(trim(substr($envelope, strpos($envelope, "ENVELOPE") + strlen("ENVELOPE"), strlen($envelope))), "("), ")");

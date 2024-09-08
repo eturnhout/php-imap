@@ -1,8 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Config\Connection;
-
-use Evt\Imap\Config\ConnectionProtocolInterface;
 
 final class Ssl implements ProtocolInterface
 {

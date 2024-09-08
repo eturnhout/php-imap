@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap;
 
@@ -6,18 +8,8 @@ use Evt\Imap\Config;
 use Evt\Imap\Cli;
 use Evt\Imap\Helpers\Input\Utf7ImapInput;
 
-/**
- * Client that communicates with a imap server and gives object responses
- *
- * @author Eelke van Turnhout <eelketurnhout3@gmail.com>
- */
 class Client
 {
-    /**
-     * @var \Evt\Imap\Config
-     */
-    private $config;
-
     /**
      * Object for imap server interactions
      *
@@ -32,14 +24,9 @@ class Client
      */
     protected $loggedIn;
 
-    /**
-     * Evt\Imap\Client
-     *
-     * @param Evt\Imap\Config $config The configurations for a imap server connection
-     */
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        protected Config $config,
+    ) {
         $this->cli = new Cli($config->getConnectionConfig());
     }
 
@@ -71,7 +58,7 @@ class Client
         return $this->executeCommand(new \Evt\Imap\Commands\SelectMailbox($mailboxInput));
     }
 
-    public function getMessageHeaders(int $fromUid, int $toUid = null) : \Evt\Imap\Structures\MessageHeaders
+    public function getMessageHeaders(int $fromUid, int $toUid = null): \Evt\Imap\Structures\MessageHeaders
     {
         return $this->executeCommand(new \Evt\Imap\Commands\GetMessageHeaders($fromUid, $toUid));
     }
@@ -79,13 +66,13 @@ class Client
     public function login(): \Evt\Imap\Structures\Login
     {
         /** @var \Evt\Imap\Structures\CapabilityStack */
-        $capabilityStack = $this->executeCommand(new \Evt\Imap\Commands\LoginCapability());
+        $capabilityStack = $this->executeCommand(new \Evt\Imap\Commands\Capability());
         $credentials = $this->config->getCredentialsConfig();
 
         if ($capabilityStack->has($credentials->getLoginType())) {
             return $this->executeCommand(new \Evt\Imap\Commands\Login($credentials));
         } else {
-            throw new \Exception($credentials->getLoginType()->name() . " login no supported");
+            throw new \Exception($credentials->getLoginType()->name() . " login not supported");
         }
     }
 

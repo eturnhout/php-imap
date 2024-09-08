@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Commands;
 
-class LoginCapability extends AbstractCommand implements CommandInterface
+final class Capability extends AbstractCommand implements CommandInterface
 {
     public function getCommand(): string
     {

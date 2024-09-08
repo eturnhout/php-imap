@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers;
 
@@ -6,7 +8,7 @@ class Capability implements ParserInterface
 {
     public function parse(?string $response): \Evt\Imap\Structures\CapabilityStack
     {
-        if ( ! $response) {
+        if (!$response) {
             throw new \Exception("No login capabilities returned");
         }
 

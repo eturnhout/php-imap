@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Commands;
 
@@ -7,14 +9,11 @@ use Evt\Imap\Config\Login\XOauth2;
 use Evt\Imap\Config\Login\Plain;
 use Evt\Imap\Parsers\ParserInterface;
 
-class Login extends AbstractCommand implements CommandInterface
+final class Login extends AbstractCommand implements CommandInterface
 {
-    private $credentialsConfig;
-
-    public function __construct(Credentials $credentialsConfig)
-    {
-        $this->credentialsConfig = $credentialsConfig;
-    }
+    public function __construct(
+        private Credentials $credentialsConfig
+    ) {}
 
     public function getCommand(): string
     {
@@ -22,11 +21,9 @@ class Login extends AbstractCommand implements CommandInterface
         $loginType = $credentialsConfig->getLoginType();
 
         if ($loginType instanceof XOauth2) {
-            $credentials = base64_encode("user=" . $credentialsConfig->getUsername() . "\1auth=Bearer " . $credentialsConfig->getKey() . "\1\1");
-            return "AUTHENTICATE XOAUTH2 " . $credentials;
+            return "AUTHENTICATE XOAUTH2 " . base64_encode("user=" . $credentialsConfig->getUsername() . "\1auth=Bearer " . $credentialsConfig->getKey() . "\1\1");
         } else if ($loginType instanceof Plain) {
-            $credentials = $credentialsConfig->getUsername() . " " . $credentialsConfig->getKey();
-            return "LOGIN " . $credentials;
+            return "LOGIN " . $credentialsConfig->getUsername() . " " . $credentialsConfig->getKey();
         }
     }
 

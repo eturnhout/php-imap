@@ -1,15 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers;
 
-class SelectMailbox implements ParserInterface
+final class SelectMailbox implements ParserInterface
 {
-    protected $mailbox;
-
-    public function __construct(string $mailbox)
-    {
-        $this->mailbox = $mailbox;
-    }
+    public function __construct(
+        private string $mailbox
+    ) {}
 
     public function parse(string $string): \Evt\Imap\Structures\Mailbox
     {

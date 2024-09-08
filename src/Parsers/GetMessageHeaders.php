@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers;
 
@@ -10,7 +12,7 @@ use Evt\Imap\Structures\MessageHeaders;
 
 class GetMessageHeaders implements ParserInterface
 {
-    public function parse(string $string) : \Evt\Imap\Structures\MessageHeaders
+    public function parse(string $string): \Evt\Imap\Structures\MessageHeaders
     {
         $lines = explode("\r\n", $string);
 
@@ -18,7 +20,7 @@ class GetMessageHeaders implements ParserInterface
 
         foreach ($lines as $line) {
 
-            if ( ! $line) {
+            if (!$line) {
                 continue;
             }
 
@@ -29,7 +31,7 @@ class GetMessageHeaders implements ParserInterface
             preg_match("~UID (?<uid>[0-9]+)~", $decodedLine, $matches);
 
             // @TODO Figure out how to handle messages that don't return a UID
-            if ( ! isset($matches['uid'])) {
+            if (!isset($matches['uid'])) {
                 continue;
             }
 

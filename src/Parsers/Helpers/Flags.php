@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers\Helpers;
 
@@ -6,12 +8,8 @@ class Flags
 {
     /**
      * Parses the flags part of the response
-     *
-     * @param string $flags String with the flags part of the response
-     *
-     * @return array A array with the flags
      */
-    public static function parse(string $flags) : array
+    public static function parse(string $flags): array
     {
         $flagsStart = strpos($flags, "FLAGS (") + strlen("FLAGS (");
         $flagsEnd = strpos($flags, ")");

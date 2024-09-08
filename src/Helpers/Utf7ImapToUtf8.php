@@ -1,11 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Helpers;
 
-class Utf7ImapToUtf8
+final class Utf7ImapToUtf8
 {
     public static function convert(string $string): string
     {
-        return \mb_convert_encoding($string, "UTF-8", "UTF7-IMAP");
+        return mb_convert_encoding($string, "UTF-8", "UTF7-IMAP");
     }
 }

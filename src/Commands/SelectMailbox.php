@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Commands;
 
@@ -7,25 +9,20 @@ use Evt\Imap\Parsers\ParserInterface;
 
 /**
  * Select a mailbox to interact with
+ * This uses the SELECT command described here https://www.rfc-editor.org/rfc/rfc3501.html#section-6.3.1
  */
-class SelectMailbox extends AbstractCommand implements CommandInterface
+final class SelectMailbox extends AbstractCommand implements CommandInterface
 {
-    protected $mailbox;
+    public function __construct(
+        private InputInterface $mailbox
+    ) {}
 
-    /**
-     * @param InputInterface $mailbox Name of the mailbox to use
-     */
-    public function __construct(InputInterface $mailbox)
-    {
-        $this->mailbox = $mailbox;
-    }
-
-    public function getCommand() : string
+    public function getCommand(): string
     {
         return 'SELECT "' . $this->mailbox->getInput() . '"';
     }
 
-    public function getParser() : ParserInterface
+    public function getParser(): ParserInterface
     {
         return new \Evt\Imap\Parsers\SelectMailbox($this->mailbox->getInput());
     }

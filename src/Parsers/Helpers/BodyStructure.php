@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers\Helpers;
 
@@ -9,7 +11,7 @@ use Evt\Imap\Structures\Attachment as AttachmentInfo;
 
 class BodyStructure
 {
-    public static function parse(string $bodystructure) : BodyStructureStructure
+    public static function parse(string $bodystructure): BodyStructureStructure
     {
         $bodystructure = str_replace("BODYSTRUCTURE (", "", $bodystructure);
         $nil = "NIL";

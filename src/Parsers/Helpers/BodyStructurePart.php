@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers\Helpers;
 
@@ -11,12 +13,8 @@ class BodyStructurePart
     /**
      * Parses a segment of the bodystructure list and converts it into one of the BodyInfo object
      * Either a MessageInfo or AttachmentInfo object
-     *
-     * @param string $part Raw sechment of a bodystructure
-     *
-     * @return Evt\Mail\Structure\Imap\BodyInfo|null
      */
-    public static function parse(string $part) : ?AbstractInfo
+    public static function parse(string $part): ?AbstractInfo
     {
         $nil = "NIL";
 
@@ -44,7 +42,7 @@ class BodyStructurePart
         }
 
         // The next two parts are not important, just remove them
-        for ($i = 0; $i < 2; $i ++) {
+        for ($i = 0; $i < 2; $i++) {
             if (strpos($part, $nil) === 0) {
                 $part = trim(substr_replace($part, "", 0, strlen($nil)));
             } else {

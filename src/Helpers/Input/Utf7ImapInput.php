@@ -1,18 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Helpers\Input;
 
-class Utf7ImapInput implements InputInterface
+final class Utf7ImapInput implements InputInterface
 {
-    private $input;
-
-    public function __construct(string $input)
-    {
-        $this->input = \mb_convert_encoding($input, "UTF7-IMAP", "UTF-8");
-    }
+    public function __construct(
+        private string $input
+    ) {}
 
     public function getInput(): string
     {
-        return $this->input;
+        return mb_convert_encoding($this->input, "UTF7-IMAP", "UTF-8");
     }
 }

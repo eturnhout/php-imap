@@ -1,35 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Evt\Imap\Structures;
 
-class Mailboxes implements StructureInterface
+final class Mailboxes implements StructureInterface
 {
-    protected $delimiter;
-    protected $mailboxes;
-
-    public function __construct(string $delimiter, array $mailboxes)
-    {
-        $this->setDelimiter($delimiter)
-            ->setMailboxes($mailboxes);
-    }
-
-    public function setDelimiter(string $delimiter)
-    {
-        $this->delimiter = $delimiter;
-
-        return $this;
-    }
+    public function __construct(
+        private string $delimiter,
+        private array $mailboxes
+    ) {}
 
     public function getDelimiter()
     {
         return $this->delimiter;
-    }
-
-    public function setMailboxes(array $mailboxes)
-    {
-        $this->mailboxes = $mailboxes;
-
-        return $this;
     }
 
     public function getMailboxes()

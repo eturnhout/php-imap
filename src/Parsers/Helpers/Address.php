@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers\Helpers;
 
@@ -8,12 +10,8 @@ class Address
 {
     /**
      * Parses a raw address string without the surrounding parenthesis
-     *
-     * @param string $address Raw address string without the parenthesis
-     *
-     * @return Evt\Imap\Structures\Address
      */
-    public static function parse(string $address) : AddressStructure
+    public static function parse(string $address): AddressStructure
     {
         $nil = "NIL";
         $startNeedle = "\"";

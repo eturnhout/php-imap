@@ -3,14 +3,10 @@ namespace Evt\Imap;
 
 use Evt\Imap\Config\Connection as ConnectionConfig;
 use Evt\Imap\Commands\UntaggedCommandInterface;
+use Exception;
 
 /**
- * \Evt\Imap\Cli
- *
  * Connect and interact with an imap server through a socket connection
- *
- * @author Eelke van Turnhout <eelketurnhout3@gmail.com>
- * @version 1.0
  */
 class Cli
 {
@@ -23,17 +19,10 @@ class Cli
     const TAG_PREFIX = 'AMWIJG';
 
     /**
-     * @var ConnectionConfig
-     */
-    private $connectionConfig;
-
-    /**
      * Tag line to append to the tag prefix
      * This number should increase with every command send to the imap server
-     *
-     * @var int
      */
-    protected $tagLine = 0;
+    protected int $tagLine = 0;
 
     /**
      * The socket created while connecting.
@@ -52,31 +41,22 @@ class Cli
 
     /**
      * Turns debug mode on to track the commands and responses.
-     *
-     * @var boolean
      */
-    protected $debug;
+    protected bool $debug = false;
 
     /**
      * Keeps track of the in/output when debug is set to true.
-     *
-     * @var string
      */
-    protected $debugOutput;
+    protected string $debugOutput = '';
 
-    /**
-     * @param ConnectionConfig $config Configurations needed to connect and login to an imap server
-     */
-    public function __construct(ConnectionConfig $connectionConfig)
-    {
-        $this->connectionConfig = $connectionConfig;
-        $this->debug = false;
-    }
+    public function __construct(
+        protected ConnectionConfig $connectionConfig
+    ) {}
 
     /**
      * Connect to the server
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function connect()
     {
@@ -87,27 +67,27 @@ class Cli
         $this->socket = stream_socket_client($fullAddress);
 
         if ( ! is_resource($this->socket)) {
-            throw new \Exception(__METHOD__ . '; There was a problem creating the socket.');
+            throw new Exception(__METHOD__ . '; There was a problem creating the socket.');
         }
 
         if (is_null($this->read())) {
-            throw new \Exception(__METHOD__ . '; Unable to read from the socket.');
+            throw new Exception(__METHOD__ . '; Unable to read from the socket.');
         }
     }
 
     /**
      * Disconnect from the server
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function disconnect()
     {
         if ( ! is_resource($this->socket)) {
-            throw new \Exception(__METHOD__ . '; No need to disconnect, no connection was found.');
+            throw new Exception(__METHOD__ . '; No need to disconnect, no connection was found.');
         }
 
         if ( ! fclose($this->socket)) {
-            throw new \Exception(__METHOD__ . '; Unable to disconnect.');
+            throw new Exception(__METHOD__ . '; Unable to disconnect.');
         }
     }
 
@@ -134,12 +114,10 @@ class Cli
             $fullCommand = self::TAG_PREFIX . $this->tagLine . ' ' . $command->getCommand() . "\r\n";
         }
 
-        if ($command->debugEnabled()) {
-            $this->debugOutput .= $fullCommand;
-        }
+        $this->debugOutput .= $fullCommand;
 
         if ( ! fwrite($this->socket, $fullCommand)) {
-            throw new \Exception(__METHOD__ . '; Unable to write to socket.');
+            throw new Exception(__METHOD__ . '; Unable to write to socket.');
         }
 
         $response = $this->read($command->debugEnabled());
@@ -184,9 +162,9 @@ class Cli
             }
         }
 
-        if ($debug && $this->error && ! $response) {
+        if ($this->error && ! $response) {
             $this->printDebugOutput();
-            throw new \Exception(__METHOD__ . '; An error has occurred "' . $this->error . '"');
+            throw new Exception(__METHOD__ . '; An error has occurred "' . $this->error . '"');
         } else if ($debug && $response) {
             $this->debugOutput .= $response;
         }

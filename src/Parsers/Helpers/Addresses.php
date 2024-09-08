@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Parsers\Helpers;
 
@@ -8,12 +10,8 @@ class Addresses
 {
     /**
      * Parses envelope fields like cc where more addresses are possible
-     *
-     * @param string $addresses The raw address string from (( to ))
-     *
-     * @return Evt\Imap\Structures\Addresses
      */
-    public static function parse(string $addresses) : AddressesStructure
+    public static function parse(string $addresses): AddressesStructure
     {
         $trimmedAddresses = trim(trim($addresses), "()");
         $addressStack = new AddressesStructure();

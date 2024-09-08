@@ -1,43 +1,24 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Evt\Imap\Structures\Body;
 
-use Evt\Imap\Structure\Body\AbstractInfo;
+use Evt\Imap\Structures\Body\AbstractInfo;
 
-/**
- * Evt\Imap\Structures\Body\Part
- *
- * @author Eelke van Turnhout <eelketurnhout3@gmail.com>
- * @version 1.0
- */
 class Part
 {
-    protected $info;
+    public function __construct(
+        protected AbstractInfo $info,
+        protected string $content
+    ) {}
 
-    protected $content;
-
-    public function __construct(AbstractInfo $info, string $content)
-    {
-        $this->setInfo($info);
-        $this->setContent($content);
-    }
-
-    public function setInfo(AbstractInfo $info)
-    {
-        $this->info = $info;
-    }
-
-    public function getInfo() : AbstractInfo
+    public function getInfo(): AbstractInfo
     {
         return $this->info;
     }
 
-    public function setContent(string $content)
-    {
-        $this->content = $content;
-    }
-
-    public function getContent() : string
+    public function getContent(): string
     {
         return $this->content;
     }
