@@ -7,6 +7,9 @@ namespace Evt\Imap;
 use Evt\Imap\Config;
 use Evt\Imap\Cli;
 use Evt\Imap\Helpers\Input\Utf7ImapInput;
+use Evt\Imap\Structures\Body\Part;
+use Evt\Imap\Structures\Body\PartStack;
+use Evt\Imap\Structures\Message;
 
 class Client
 {
@@ -87,25 +90,25 @@ class Client
     /**
      * Get a message with it's envelope and body parts
      *
-     * @param integer $uid Uid of the message to fetch
-     *
      * @return Evt\Imap\Structure\Message
      */
-    /*public function getMessage($uid)
+    public function getMessage(int $uid)
     {
-        Validate::integer("uid", $uid, __METHOD__);
-        $this->login();
-        $messageHeaders = $this->getMessageHeaders($uid, null);
+        $this->executeCommand(new \Evt\Imap\Commands\Uid\Fetch(
+            new Utf7ImapInput($uid . ' (BODY[])')
+        ));
+
+        /*$messageHeaders = $this->getMessageHeaders($uid, null);
         $messageHeader = $messageHeaders->pop();
         $bodystructure = $messageHeader->getBodystructure();
         $messageStructures = $bodystructure->getMessageInfoStack();
         $attachmentStructures = $bodystructure->getAttachmentInfoStack();
 
-        $bodyParts = new BodyParts();
-        $finalMessagePart = 1;
+        $bodyParts = new PartStack();
+        $finalMessagePart = 1;*/
 
         // First get the message contents
-        while ($messageStructures->valid()) {
+        /*while ($messageStructures->valid()) {
             $structure = $messageStructures->current();
             $position = $messageStructures->key() + 1;
 
@@ -117,14 +120,14 @@ class Client
 
             if (! is_null($response)) {
                 $message = Parser::parseContent($response);
-                $bodyParts->push(new BodyPart($messageStructures->current(), $message));
+                $bodyParts->push(new Part($messageStructures->current(), $message));
             }
 
             $messageStructures->next();
-        }
+        }*/
 
         // Now get the attachments
-        while ($attachmentStructures->valid()) {
+        /*while ($attachmentStructures->valid()) {
             $structure = $attachmentStructures->current();
             $position = $attachmentStructures->key() + 2;
             $response = $this->cli->uidFetch((string) $uid, "(BODY[" . $position . "])");
@@ -139,8 +142,13 @@ class Client
             }
 
             $attachmentStructures->next();
-        }
+        }*/
 
-        return new Message($messageHeader->getEnvelope(), $bodyParts);
-    }*/
+        //return new Message($messageHeader->getEnvelope(), $bodyParts);
+    }
+
+    public function printDebugOutput(): void
+    {
+        print_r($this->cli->getDebugOutput());
+    }
 }

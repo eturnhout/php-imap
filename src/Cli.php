@@ -40,11 +40,6 @@ class Cli
     protected $error;
 
     /**
-     * Turns debug mode on to track the commands and responses.
-     */
-    protected bool $debug = false;
-
-    /**
      * Keeps track of the in/output when debug is set to true.
      */
     protected string $debugOutput = '';
@@ -91,14 +86,9 @@ class Cli
         }
     }
 
-    /**
-     * Print the in/output commands
-     *
-     * @return string The commands and responses
-     */
-    public function printDebugOutput()
+    public function getDebugOutput(): string
     {
-        echo $this->debugOutput;
+        return $this->debugOutput;
     }
 
     public function execute(\Evt\Imap\Commands\CommandInterface $command) : \Evt\Imap\Structures\StructureInterface
@@ -120,7 +110,7 @@ class Cli
             throw new Exception(__METHOD__ . '; Unable to write to socket.');
         }
 
-        $response = $this->read($command->debugEnabled());
+        $response = $this->read();
 
         if ( ! $command instanceof UntaggedCommandInterface) {
             $response = $this->stripTag($response);
@@ -135,16 +125,16 @@ class Cli
      *
      * @return string The response from the server.
      */
-    protected function read(bool $debug = false)
+    protected function read()
     {
         $line = fread($this->socket, 2048);
         $this->error = null;
         $response = null;
         $tag = self::TAG_PREFIX . $this->tagLine;
 
-        if (strpos($line, '* OK') === 0) {
+        if (mb_strpos($line, '* OK') === 0) {
             $response = $line;
-        } elseif (strpos($line, $tag . " NO") !== false || strpos($line, $tag . " BAD") !== false || strpos($line, "* BAD") !== false || strpos($line, "* NO") !== false) {
+        } elseif (mb_strpos($line, $tag . " NO") !== false || mb_strpos($line, $tag . " BAD") !== false || mb_strpos($line, "* BAD") !== false || mb_strpos($line, "* NO") !== false) {
             $this->error = trim($line);
         } elseif (! $line) {
             $this->error = 'Unable to read from the socket connection.';
@@ -154,18 +144,17 @@ class Cli
             /*
              * If this passes based on the + sign at the start or end of the line, methods reading should check for this and act accordingly.
              */
-            if (strpos($line, $tag) !== 0 && strpos($line, "+", strlen($line) - 1) === false && strpos($line, "+") !== 0) {
-                while (strpos($line, "\r\n" . $tag) === false && strpos($line, $tag) !== 0) {
+            if (mb_strpos($line, $tag) !== 0 && mb_strpos($line, "+", mb_strlen($line) - 1) === false && mb_strpos($line, "+") !== 0) {
+                while (mb_strpos($line, "\r\n" . $tag) === false && strpos($line, $tag) !== 0) {
                     $line = fread($this->socket, 2048);
                     $response .= $line;
                 }
             }
         }
 
-        if ($this->error && ! $response) {
-            $this->printDebugOutput();
+        if ($this->error && !$response) {
             throw new Exception(__METHOD__ . '; An error has occurred "' . $this->error . '"');
-        } else if ($debug && $response) {
+        } else if ($response) {
             $this->debugOutput .= $response;
         }
 
@@ -183,17 +172,17 @@ class Cli
      */
     protected function stripTag($response)
     {
-        if (! is_string($response) || strlen($response) == 0) {
+        if (!is_string($response) || mb_strlen($response) === 0) {
             throw new \InvalidArgumentException(__METHOD__ . "; The response must be a non empty string.");
         }
 
-        if (strpos($response, self::TAG_PREFIX . $this->tagLine) == 0) {
+        if (mb_strpos($response, self::TAG_PREFIX . $this->tagLine) == 0) {
             $needle = self::TAG_PREFIX . $this->tagLine;
         } else {
             $needle = "\r\n" . self::TAG_PREFIX . $this->tagLine;
         }
 
-        $strippedResponse = substr($response, 0, strrpos($response, $needle));
+        $strippedResponse = mb_substr($response, 0, mb_strrpos($response, $needle));
 
         return $strippedResponse;
     }
