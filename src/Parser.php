@@ -13,15 +13,15 @@ class Parser
 {
     public static function parseContent($content)
     {
-        $start = strpos($content, "}") + 1;
-        $length = strlen($content) - $start + 1;
+        $start = mb_strpos($content, "}") + 1;
+        $length = mb_strlen($content) - $start + 1;
 
-        if ((strrpos($content, "UID") - $length > 0) && (strrpos($content, "UID") - $length < 5)) { // Sometimes the uid is at the end of the response. @TODO find a better way to remove this if possible.
-            $cleanContent = substr($content, $start, $length);
+        if ((mb_strrpos($content, "UID") - $length > 0) && (mb_strrpos($content, "UID") - $length < 5)) { // Sometimes the uid is at the end of the response. @TODO find a better way to remove this if possible.
+            $cleanContent = mb_substr($content, $start, $length);
             $lastUidPosition = strrpos($cleanContent, "UID");
-            $cleanContent = trim(substr($cleanContent, 0, $lastUidPosition));
+            $cleanContent = trim(mb_substr($cleanContent, 0, $lastUidPosition));
         } else {
-            $cleanContent = trim(substr($content, $start, $length), ")");
+            $cleanContent = trim(mb_substr($content, $start, $length), ")");
         }
 
         return $cleanContent;
