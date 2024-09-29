@@ -22,4 +22,9 @@ $credentialsConfig = new CredentialsConfig($username, $key, $loginType);
 $imapConfig = new ImapConfig($connectionConfig, $credentialsConfig);
 
 $client = new Client($imapConfig);
+$client->login();
+$client->selectMailbox('Inbox');
+print_r($client->getMessageHeaders(1));
+print_r($client->getMessage(1));
+$client->logout();
 </pre>
